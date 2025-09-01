@@ -27,6 +27,11 @@ def UsdEth(eth_amount: uint256) -> uint256:
     result: uint256 = (eth_amount * eth_price_uint256) // (10**18)  # Calculate USD equivalent
     return result
 
+@external
+@view
+def _UsdEth(eth_amount: uint256) -> uint256:
+    return self.UsdEth()
+
 @deploy
 def __init__(price_feed_address: address):
     # 0x694AA1769357215DE4FAC081bf1f309aDC325306 is the price contract
