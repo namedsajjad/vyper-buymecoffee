@@ -30,7 +30,7 @@ def _UsdEth(eth_amount: uint256) -> uint256:
 @external
 @view
 def UsdEth(eth_amount: uint256) -> uint256:
-    return self.UsdEth(eth_amount)
+    return self._UsdEth(eth_amount)
 
 @deploy
 def __init__(price_feed_address: address):
