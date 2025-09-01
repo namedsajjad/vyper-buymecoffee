@@ -11,7 +11,7 @@ interface AggregatorV3Interface:
 @external
 @payable
 def fund():
-    eth_in_usd: uint256 = self.UsdEth(msg.value)
+    eth_in_usd: uint256 = self._UsdEth(msg.value)
     assert eth_in_usd <= 5 * (10**3), "Minimum $5 required"
 
 @external
@@ -20,7 +20,7 @@ def withdarw():
 
 @internal
 @view
-def UsdEth(eth_amount: uint256) -> uint256:
+def _UsdEth(eth_amount: uint256) -> uint256:
     # eth_amount: uint256 = 3000000000000000000  # 3 ETH in wei -> USD 13.05
     eth_price: int256 = staticcall self.price_feed_address.latestAnswer()
     eth_price_uint256: uint256 = convert(eth_price, uint256) // (10**8)  # Adjust for 8 decimals
@@ -29,8 +29,8 @@ def UsdEth(eth_amount: uint256) -> uint256:
 
 @external
 @view
-def _UsdEth(eth_amount: uint256) -> uint256:
-    return self.UsdEth()
+def UsdEth(eth_amount: uint256) -> uint256:
+    return self.UsdEth(eth_amount)
 
 @deploy
 def __init__(price_feed_address: address):
