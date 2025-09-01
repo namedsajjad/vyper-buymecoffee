@@ -1,6 +1,8 @@
 # @version 0.4.0
 # @license MIT
 
+owner: address
+
 price_feed_address: AggregatorV3Interface
 interface AggregatorV3Interface:
     def decimals() -> uint8: view
@@ -16,7 +18,8 @@ def fund():
 
 @external
 def withdarw():
-    pass
+    assert msg.sender == self.owner, "Not the contract owner!"
+    send(self.owner, self.balance)
 
 @internal
 @view
@@ -36,3 +39,4 @@ def UsdEth(eth_amount: uint256) -> uint256:
 def __init__(price_feed_address: address):
     # 0x694AA1769357215DE4FAC081bf1f309aDC325306 is the price contract
     self.price_feed_address = AggregatorV3Interface(price_feed_address)
+    self.owner = msg.sender
