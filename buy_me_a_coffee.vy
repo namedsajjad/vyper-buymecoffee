@@ -1,8 +1,16 @@
 # @version 0.4.0
 # @license MIT
 
+# the contract owner address
 owner: address
 
+# to track who fund me
+struct Funder:
+    funder_address: address
+    funder_amount: uint256
+funders: public(DynArray[Funder,1000000])
+
+# getting the price from chainlink
 price_feed_address: AggregatorV3Interface
 interface AggregatorV3Interface:
     def decimals() -> uint8: view
@@ -15,11 +23,14 @@ interface AggregatorV3Interface:
 def fund():
     eth_in_usd: uint256 = self._UsdEth(msg.value)
     assert eth_in_usd <= 5 * (10**3), "Minimum $5 required"
+    f: Funder = Funder(funder_address=msg.sender, funder_amount=eth_in_usd)
+    self.funders.append(f)
 
 @external
 def withdarw():
     assert msg.sender == self.owner, "Not the contract owner!"
     send(self.owner, self.balance)
+    self.funders = []
 
 @internal
 @view
